@@ -7,25 +7,24 @@ const { User } = require("./model/User");
 const app = express();
 app.use(express.json());
 
-const client = new Client({
-    cloud: {
-        id: process.env.CLOUD_ID,
-    },
-    auth: {
-        apiKey: process.env.API_KEY,
-    },
-});
+let config;
 
-// const client = new Client({
-//     node: "https://f63c1038332748a585f862724cf27409.us-central1.gcp.cloud.es.io", // Elasticsearch endpoint
-//     auth: {
-//         apiKey: {
-//             // API key ID and secret
-//             api_key:
-//                 "SG5QMEZvMEJSR1V3b0V5Zm5GbDY6VGNxQzNic09TamlMRWQ1bnNTUHJSUQ==",
-//         },
-//     },
-// });
+if (process.env.ENV === "dev") {
+    config = {
+        node: "http://elastic-search:9200",
+    };
+} else {
+    config = {
+        cloud: {
+            id: process.env.CLOUD_ID,
+        },
+        auth: {
+            apiKey: process.env.API_KEY,
+        },
+    };
+}
+
+const client = new Client(config);
 
 app.get("/test", async (req, res) => {
     return res.status(200).json({ data: "test route hit" });
