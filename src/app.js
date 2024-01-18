@@ -1,8 +1,10 @@
 require("dotenv").config();
+const fs = require("fs");
 const express = require("express");
 const mongoose = require("mongoose");
 const { Client } = require("@elastic/elasticsearch");
 const { User } = require("./model/User");
+const ca_cert = fs.readFileSync("./http_ca.crt");
 
 const app = express();
 app.use(express.json());
@@ -11,7 +13,15 @@ let config;
 
 if (process.env.ENV === "dev") {
     config = {
-        node: "http://elastic-search:9200",
+        node: `http://elastic-search:9200`,
+        // auth: {
+        //     username: "elastic",
+        //     password: "changeme",
+        // },
+        // tls: {
+        //     ca: fs.readFileSync("./http_ca.crt"),
+        //     rejectUnauthorized: false,
+        // },
     };
 } else {
     config = {
@@ -23,8 +33,19 @@ if (process.env.ENV === "dev") {
         },
     };
 }
+let client;
 
-const client = new Client(config);
+try {
+    client = new Client(config);
+    const testConn = async () => {
+        const res = await client.info();
+        console.log({ res });
+    };
+
+    testConn();
+} catch (error) {
+    console.log({ error });
+}
 
 app.get("/test", async (req, res) => {
     return res.status(200).json({ data: "test route hit" });
