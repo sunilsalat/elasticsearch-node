@@ -22,3 +22,15 @@
 -   https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html
 -   https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/client-connecting.html (javascript cleint guide)
 -   https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html (setting up elasticsearch in docker guide)
+
+# curl
+
+-   curl -H 'Content-Type: application/json' \
+     -d '{ "name":"sachin"}' \
+     -X POST \
+     http://localhost:8080/read
+
+-   curl -H 'Content-Type: application/json' \
+     -d '{ "firstname":"sachin", "lastname":"tendulkar", "email":"sachin@gmail.com"}' \
+     -X POST \
+     http://localhost:8080/create
